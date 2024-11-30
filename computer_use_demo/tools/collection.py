@@ -13,11 +13,22 @@ from .base import (
 
 
 class ToolCollection:
-    """A collection of anthropic-defined tools."""
+    """Enhanced tool collection with neural processing capabilities."""
 
-    def __init__(self, *tools: BaseAnthropicTool):
-        self.tools = tools
-        self.tool_map = {tool.to_params()["name"]: tool for tool in tools}
+    def __init__(self, *tools: BaseAnthropicTool, enable_neural: bool = True, api_key: str = None):
+        """Initialize with neural enhancement capabilities"""
+        from .neural import NeuralEnhancedComputerTool
+        
+        # Convert ComputerTool to NeuralEnhancedComputerTool if neural is enabled
+        processed_tools = []
+        for tool in tools:
+            if enable_neural and api_key and tool.to_params()["name"] == "computer":
+                tool = NeuralEnhancedComputerTool(api_key)
+            processed_tools.append(tool)
+            
+        self.tools = processed_tools
+        self.tool_map = {tool.to_params()["name"]: tool for tool in processed_tools}
+        self.enable_neural = enable_neural
 
     def to_params(
         self,

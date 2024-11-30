@@ -98,10 +98,13 @@ async def sampling_loop(
     """
     Agentic sampling loop for the assistant/tool interaction of computer use.
     """
+    # Initialize tool collection with neural enhancement
     tool_collection = ToolCollection(
         ComputerTool(),
         BashTool(),
         EditTool(),
+        enable_neural=True,
+        api_key=api_key  # Pass API key for neural processing
     )
     system = BetaTextBlockParam(
         type="text",
