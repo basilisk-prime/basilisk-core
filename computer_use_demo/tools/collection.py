@@ -43,3 +43,8 @@ class ToolCollection:
             return await tool(**tool_input)
         except ToolError as e:
             return ToolFailure(error=e.message)
+            
+    async def analyze_and_generate_command(self, task: str, api_key: str) -> str:
+        """Generate optimal command sequence for a task"""
+        from .metacmd import generate_meta_command
+        return await generate_meta_command(task, api_key)
